@@ -1,4 +1,4 @@
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import multer from "multer";
 import crypto from 'crypto';
@@ -39,29 +39,6 @@ export const imageUpload = async (file) => {
     }
 }
 
-export const getGroupOfImage = async (datas) => {
-    try {
-        const updatedDatas = [];
-        for (let data of datas) {
-            if (data.imageUrl) {
-                data.imageUrl = await getSignedUrl(
-                    s3Client,
-                    new GetObjectCommand({
-                        Bucket: bucketName,
-                        Key: data.imageUrl
-                    }),
-                    { expiresIn: 3600 }
-                )
-                updatedDatas.push(data);
-            }
-        }
-        return updatedDatas;
-    } catch (error) {
-        console.error("Error getting group of images:", error);
-        throw new Error("Failed to get group of images");
-    }
-}
-
 export const getSingleImage = async (data) => {
     try {
         const updatedData = data;
@@ -79,20 +56,5 @@ export const getSingleImage = async (data) => {
     } catch (error) {
         console.error("Error getting single image:", error);
         throw new Error("Failed to get single image");
-    }
-};
-
-export const deleteImage = async (data) => {
-    try {
-        if (data.imageUrl) {
-            const deleteParams = {
-                Bucket: bucketName,
-                Key: data.imageUrl,
-            }
-            await s3Client.send(new DeleteObjectCommand(deleteParams))
-        }
-    } catch (error) {
-        console.error("Error deleting image:", error);
-        throw new Error("Failed to delete image");
     }
 };

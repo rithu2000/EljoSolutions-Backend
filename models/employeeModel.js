@@ -25,7 +25,7 @@ const Employee = sequelize.define('Employee', {
     contactNo: {
         type: DataTypes.STRING,
         allowNull: true,
-      },
+    },
     department: {
         type: DataTypes.STRING,
         allowNull: false,

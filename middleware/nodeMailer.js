@@ -21,7 +21,6 @@ export const sendMail = async (to, subject, text) => {
         console.log('Email sent:', info.response);
         return { success: true, message: 'Login credentials sent successfully.' };
     } catch (error) {
-        console.log(error,'error');
         console.error('Error sending email:', error.message);
         return { success: false, message: 'Failed to send login credentials.' };
     }
