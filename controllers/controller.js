@@ -60,10 +60,18 @@ const generateRandomPassword = () => {
 export const addEmployee = async (req, res, next) => {
   const { employeeCode, firstName, lastName, emailId, contactNo, department } = req.body;
   try {
-    const existingEmployee = await Employee.findOne({ where: { emailId } });
-    if (existingEmployee) {
+    // Check if email or employee code already exists
+    const existingEmailEmployee = await Employee.findOne({ where: { emailId } });
+    const existingCodeEmployee = await Employee.findOne({ where: { employeeCode } });
+
+    if (existingEmailEmployee) {
       return res.status(401).json({ success: false, message: 'Employee with this email already exists.' });
     }
+
+    if (existingCodeEmployee) {
+      return res.status(401).json({ success: false, message: 'Employee with this code already exists.' });
+    }
+
     // Generate a random password
     const randomPassword = generateRandomPassword();
     const hashedPassword = await bcrypt.hash(randomPassword, 10);
@@ -160,7 +168,6 @@ export const loginEmployee = async (req, res, next) => {
     }
 
     const accessToken = generateTokens(employee);
-    console.log(accessToken, 'accessToken');
 
     return res.status(200).json({ success: true, message: 'Login successful', accessToken, data: employee });
   } catch (error) {
