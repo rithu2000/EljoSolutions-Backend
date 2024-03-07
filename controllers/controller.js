@@ -104,7 +104,7 @@ export const addEmployee = async (req, res, next) => {
 
 export const editEmployee = async (req, res, next) => {
   const imageName = req.file;
-  const { id, employeeCode, firstName, lastName, emailId, ContactNo, department } = req.body;
+  const { id, firstName, lastName, ContactNo, department } = req.body;
 
   try {
     const employeeToUpdate = await Employee.findByPk(id);
@@ -120,10 +120,8 @@ export const editEmployee = async (req, res, next) => {
     if (imageUrl) {
       employeeToUpdate.imageUrl = imageUrl;
     }
-    employeeToUpdate.employeeCode = employeeCode;
     employeeToUpdate.firstName = firstName;
     employeeToUpdate.lastName = lastName;
-    employeeToUpdate.emailId = emailId;
     employeeToUpdate.ContactNo = ContactNo;
     employeeToUpdate.department = department;
 
